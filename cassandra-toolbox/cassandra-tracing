@@ -36,7 +36,7 @@ def parse_args():
                   - Starting timestamp of the session (hidden in slim mode)
                   - CQL query or inferred query fragment (hidden in slim mode)
 
-                  The results can be limited by tresholds on both duraiton and
+                  The results can be limited by thresholds on both duration and
                   tombstones, and by and a result cap. The result cap gathers
                   the same number of results but caps the display - when using
                   this, the results displayed are always the longest duration
