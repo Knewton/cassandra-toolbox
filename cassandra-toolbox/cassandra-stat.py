@@ -192,12 +192,10 @@ class CassandraStat(object):
             dict:           Dictionary of JMX key: value pairs
         """
         kvs = key.split(":")[1]
-        kvlist = kvs.split(",")
-        retval = {}
-        for kv in kvlist:
-            split = kv.split("=")
-            retval[split[0]] = split[1]
-        return retval
+        return {
+            kvstr.split("=")[0]: kvstr.split("=")[1]
+            for kvstr in kvs.split(",")
+        }
 
     def fetch_and_update(
         self,
@@ -262,7 +260,7 @@ class CassandraStat(object):
             None, all the data that is of interest is added into the data
             dictionary that is passed in.  As Python passes objects by
             reference the calling function will have the data dict updated
-            to include the data requested without requiring the assignmend of
+            to include the data requested without requiring the assignment of
             a returned value.
 
         **Exit Conditions:**
@@ -627,17 +625,20 @@ def main():
     if args.namespaces:
         namespaces = args.namespaces.split(",")
 
-    CassandraStat(
-        host=args.host,
-        header_rows=args.header_rows,
-        rate=args.rate,
-        show_system=args.show_system,
-        show_keyspace=args.show_keyspace,
-        show_cfs=args.show_cfs,
-        show_total=args.show_total,
-        show_zeros=args.show_zeros,
-        namespaces=namespaces
-    )
+    try:
+        CassandraStat(
+            host=args.host,
+            header_rows=args.header_rows,
+            rate=args.rate,
+            show_system=args.show_system,
+            show_keyspace=args.show_keyspace,
+            show_cfs=args.show_cfs,
+            show_total=args.show_total,
+            show_zeros=args.show_zeros,
+            namespaces=namespaces
+        )
+    except KeyboardInterrupt:
+        sys.exit(0)
 
 
 if __name__ == "__main__":
