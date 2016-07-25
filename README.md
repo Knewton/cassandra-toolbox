@@ -45,26 +45,26 @@ To use cassandra-stat you only need to execute the following local to the Cassan
 
 The output will look similar to the following:
 
-    Reads     Ranges    Writes    Reads (99%) ms   Ranges (99%) ms   Writes (99%) ms   Compactions     Flushes    Row Cache Misses     time    ns
+    Reads     Ranges    Writes    Reads (99%) ms   Ranges (99%) ms   Writes (99%) ms   Compactions     Flushes    Row Cache Misses     Time    ns
       1         0        111          91.462            68.81            17.4               0             0              0           20:15:36  total
       2         4        113           91.4             68.30            17.98              0             0              0           20:15:37  total
       0         0        117           91.4             68.30            17.17              0             0              0           20:15:38  total
       0         0         72           91.4             68.30            17.34              0             0              0           20:15:39  total
       0         2         69           91.4             68.30            17.3               0             0              0           20:15:40  total
 
-The fields that are output are:
+The fields that are output are as follows:
 
  * Reads:               Number of reads since the last line was reported
- * Writes:              Number of writes (updates/insertions/deletions) since the last line was reported
  * Ranges:              Number of range queries since the last line was reported
+ * Writes:              Number of writes (updates/insertions/deletions) since the last line was reported
  * Reads (99%):         99th percentile latency in reads given in milliseconds
- * Writes (99%):        99th percentile latency in writes (updates/insertions/deletions) given in milliseconds
  * Ranges (99%):        99th percentile latency in range queries given in milliseconds
+ * Writes (99%):        99th percentile latency in writes (updates/insertions/deletions) given in milliseconds
  * Compactions:         Number of pending compactions
  * Flushes :            Number of memtable flushes that are in progress
  * Row Cache Misses:    Number of row cache misses that have occured since the last line was reported
  * time:                Time in HH:MM:SS that the line was recorded at
- * ns:                  Namespace that the statistic is output for.  This can be "total" which is a sum for all keyspaces, "<keyspace>" which is a sum of all column families inside that keyspace, or "<keyspace>.<columnfamily>" which is the most granular output
+ * ns:                  Namespace that the statistic is output for.  This can be "total" which is a sum for all keyspaces, `<keyspace>` which is a sum of all column families inside that keyspace, or `<keyspace>.<columnfamily>` which is the most granular output
 
 If a namespace has no traffic, that is if there are 0 reads, range queries, or writes reported for that namespace then the namespace will not be output to the screen with the exception of "total" which will always be output.  Note that some of the statistics are differences with the previous line so the absolute numbers can vary depending on the rate that is chosen (this is configurable, see below).  Additionally the 99 percentile outputs are for a moving average that is generated internally by the Cassandra metric libraries so they are not representative of the 99th percentile at that instant.  Any aggregate level metrics (total or keyspace level metrics) will show the highest 99th percentile latency.  Aggregates for other metrics are summations of the constituent column families.  By default system keyspaces are not included in these aggregations, but this is configurable.
 
@@ -75,19 +75,19 @@ Configurations are set by command line flags, these can be accessed by running `
   * --rate int:
   	* How many seconds should pass between server polls.  Default 1.
   * --show_system:
-	* Include system keyspaces and their related column families in the output.  The aggregation in "total" will include system keyspace entires as well.
-  * --host host:
+	* Include system keyspaces and their related column families in the output.  The aggregation in "total" will include system keyspace entires as well, which is not the default behavior.
+  * --host string:
 	* The http://HOST:PORT that this script should connect to.  Default http://localhost:8778.
   * --show_keyspaces:
 	* Set this flag in order to show keyspace level output.
   * --show_cfs:
-	* Set this flag to show <keyspace>.<columnfamily> level output.
+	* Set this flag to show `<keyspace>.<columnfamily>` level output.
   * --no_total:
 	* Set this flag to suppress output of the aggregated total.  This may have the effect of having no output when there is no traffic in the database.
   * --show_zeros:
 	* Show all namespaces that are set to be output regardless if there is no activity.
-  * --namespaces namespaces:
-  	* Comma separated list of namespaces to process and show.  To show an entire keyspace then use the keyspace name as an entry, and to show only a column family then add `<keyspace>.<columnfamily>` to the list.  For example `--namespaces keyspace1,keyspace2.test1` would show all column families from keyspace1 and only the test1 column family from keyspace two.  Note that there can be strange behaviors with this flag as other flags.  Adding a system keyspace to this flag will have no effect unless the `--show_system` flag is also included.  Adding namespaces to this flag will change what namespaces are included in the total for aggregations but these namespaces will not be printed out if the `--show_keyspaces` or `--show_cfs` flags are not included.  For example `--namespaces keyspace1,keyspace2.test1 --show_keyspaces` would output an entry for `total`, `keyspace1`, and `keyspace2` where `total` will be the aggregate of all column families in keyspace1 as well as the column family test1 in keyspace2, `keyspace1` will be the aggregate of all column families within it, and `keyspace2` will be the aggregate of only the column family `test1`.  If you are using this flag and show_system then you must include which system keyspaces you wish to include, they will not be included by default if using the namespaces flag.
+  * --namespaces string:
+  	* Comma separated list of namespaces to process and show.  To show an entire keyspace then use the keyspace name as an entry, and to show only a column family then add `<keyspace>.<columnfamily>` to the list.  For example `--namespaces keyspace1,keyspace2.test1` would show all column families from keyspace1 and only the test1 column family from keyspace2.  Note that there can be strange behaviors with this flag as other flags.  Adding a system keyspace to this flag will have no effect unless the `--show_system` flag is also included.  Adding namespaces to this flag will change what namespaces are included in the total for aggregations but these namespaces will not be printed out if the `--show_keyspaces` or `--show_cfs` flags are not included.  For example `--namespaces keyspace1,keyspace2.test1 --show_keyspaces` would output an entry for `total`, `keyspace1`, and `keyspace2` where `total` will be the aggregate of all column families in keyspace1 as well as the column family test1 in keyspace2, `keyspace1` will be the aggregate of all column families within it, and `keyspace2` will be the aggregate of only the column family `test1`.  If you are using this flag and show_system then you must include which system keyspaces you wish to include, they will not be included by default if using the namespaces flag.
 
 cassandra-tracing
 -----------------
@@ -97,7 +97,7 @@ This script facilitates analysis of Cassandra tracing data, which on its own is 
 
 Note that a value of 1 means every query will be traced.  A trace logs many lines for every query so be careful of setting this value very high.  It is possible that tracing less than 5% of all queries can result in a write workload which is equal in number to the load which it is tracing.
 
-To use cassandra-stat you only need to execute the following local to the Cassandra instance you wish to investigate the tracing logs of.  You must have activated the virtual environment that cassandra-toolbox is installed into if you have installed the pacakge into a virtual environment.
+To use cassandra-tracing you only need to execute the following local to the Cassandra instance you wish to investigate the tracing logs of.  You must have activated the virtual environment that cassandra-toolbox is installed into if you have installed the pacakge into a virtual environment.
 
     $cassandra-tracing `hostname -I`
 
@@ -169,7 +169,7 @@ Configurations are set by command line flags, these can be accessed by running `
 	* Show only sessions who read tombstones equal to or greater than this threshold.  Default 0.
   * --time int:
 	* Show only sessions that took longer than this threshold in microseconds.  Default 10000 (10ms).
-  * -resultCap int:
+  * --resultCap int:
 	* Maximum number of results to print out. To print all results, use 0.  Default 100.
   * --slim:
   	* Enable slim mode, where the query and time started are suppressed in the output.
