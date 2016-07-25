@@ -64,7 +64,7 @@ The fields that are output are as follows:
  * Flushes :            Number of memtable flushes that are in progress
  * Row Cache Misses:    Number of row cache misses that have occured since the last line was reported
  * time:                Time in HH:MM:SS that the line was recorded at
- * ns:                  Namespace that the statistic is output for.  This can be "total" which is a sum for all keyspaces, `<keyspace>` which is a sum of all column families inside that keyspace, or `<keyspace>.<columnfamily> which is the most granular output
+ * ns:                  Namespace that the statistic is output for.  This can be "total" which is a sum for all keyspaces, `<keyspace>` which is a sum of all column families inside that keyspace, or `<keyspace>.<columnfamily>` which is the most granular output
 
 If a namespace has no traffic, that is if there are 0 reads, range queries, or writes reported for that namespace then the namespace will not be output to the screen with the exception of "total" which will always be output.  Note that some of the statistics are differences with the previous line so the absolute numbers can vary depending on the rate that is chosen (this is configurable, see below).  Additionally the 99 percentile outputs are for a moving average that is generated internally by the Cassandra metric libraries so they are not representative of the 99th percentile at that instant.  Any aggregate level metrics (total or keyspace level metrics) will show the highest 99th percentile latency.  Aggregates for other metrics are summations of the constituent column families.  By default system keyspaces are not included in these aggregations, but this is configurable.
 
@@ -81,7 +81,7 @@ Configurations are set by command line flags, these can be accessed by running `
   * --show_keyspaces:
 	* Set this flag in order to show keyspace level output.
   * --show_cfs:
-	* Set this flag to show <keyspace>.<columnfamily> level output.
+	* Set this flag to show `<keyspace>.<columnfamily>` level output.
   * --no_total:
 	* Set this flag to suppress output of the aggregated total.  This may have the effect of having no output when there is no traffic in the database.
   * --show_zeros:
