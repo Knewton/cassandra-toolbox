@@ -461,11 +461,11 @@ class CassandraStat(object):
             # who have values that are not 0 or None.  This can then be
             # tested in a conditional, if the list is empty then it will
             # evaluate to false.
-            ns_nonzero_fields = [
+            nonzero_value_fields = [
                 y for y in nonzero_fields if metric_data.get(y["display_name"])
             ]
 
-            # The conditioanl for displaying a line of data is broken into
+            # The conditional for displaying a line of data is broken into
             # two statements
             #
             # The first statement checks three things.  If the field
@@ -479,8 +479,15 @@ class CassandraStat(object):
             # is set to False this will fail and if the ns is not "total" it
             # will fail.
             if (
-                (ns_nonzero_fields or self.show_zeros or not nonzero_fields) or
-                (ns == "total" and self.show_total)
+                (
+                    nonzero_value_fields or
+                    self.show_zeros or
+                    not nonzero_fields
+                ) or
+                (
+                    ns == "total" and
+                    self.show_total
+                )
             ):
                 datastr = ""
                 for metric in self.metrics:

@@ -64,7 +64,7 @@ The fields that are output are as follows:
  * Flushes :            Number of memtable flushes that are in progress
  * Row Cache Misses:    Number of row cache misses that have occured since the last line was reported
  * time:                Time in HH:MM:SS that the line was recorded at
- * ns:                  Namespace that the statistic is output for.  This can be "total" which is a sum for all keyspaces, "&lt;keyspace&gt;" which is a sum of all column families inside that keyspace, or "&lt;keyspace&gt;.&lt;columnfamily&gt;" which is the most granular output
+ * ns:                  Namespace that the statistic is output for.  This can be "total" which is a sum for all keyspaces, `<keyspace>` which is a sum of all column families inside that keyspace, or `<keyspace>.<columnfamily> which is the most granular output
 
 If a namespace has no traffic, that is if there are 0 reads, range queries, or writes reported for that namespace then the namespace will not be output to the screen with the exception of "total" which will always be output.  Note that some of the statistics are differences with the previous line so the absolute numbers can vary depending on the rate that is chosen (this is configurable, see below).  Additionally the 99 percentile outputs are for a moving average that is generated internally by the Cassandra metric libraries so they are not representative of the 99th percentile at that instant.  Any aggregate level metrics (total or keyspace level metrics) will show the highest 99th percentile latency.  Aggregates for other metrics are summations of the constituent column families.  By default system keyspaces are not included in these aggregations, but this is configurable.
 
@@ -81,13 +81,13 @@ Configurations are set by command line flags, these can be accessed by running `
   * --show_keyspaces:
 	* Set this flag in order to show keyspace level output.
   * --show_cfs:
-	* Set this flag to show &lt;keyspace&gt;.&lt;columnfamily&gt; level output.
+	* Set this flag to show <keyspace>.<columnfamily> level output.
   * --no_total:
 	* Set this flag to suppress output of the aggregated total.  This may have the effect of having no output when there is no traffic in the database.
   * --show_zeros:
 	* Show all namespaces that are set to be output regardless if there is no activity.
   * --namespaces string:
-  	* Comma separated list of namespaces to process and show.  To show an entire keyspace then use the keyspace name as an entry, and to show only a column family then add `&lt;keyspace&gt;.&lt;columnfamily&gt;` to the list.  For example `--namespaces keyspace1,keyspace2.test1` would show all column families from keyspace1 and only the test1 column family from keyspace2.  Note that there can be strange behaviors with this flag as other flags.  Adding a system keyspace to this flag will have no effect unless the `--show_system` flag is also included.  Adding namespaces to this flag will change what namespaces are included in the total for aggregations but these namespaces will not be printed out if the `--show_keyspaces` or `--show_cfs` flags are not included.  For example `--namespaces keyspace1,keyspace2.test1 --show_keyspaces` would output an entry for `total`, `keyspace1`, and `keyspace2` where `total` will be the aggregate of all column families in keyspace1 as well as the column family test1 in keyspace2, `keyspace1` will be the aggregate of all column families within it, and `keyspace2` will be the aggregate of only the column family `test1`.  If you are using this flag and show_system then you must include which system keyspaces you wish to include, they will not be included by default if using the namespaces flag.
+  	* Comma separated list of namespaces to process and show.  To show an entire keyspace then use the keyspace name as an entry, and to show only a column family then add `<keyspace>.<columnfamily>` to the list.  For example `--namespaces keyspace1,keyspace2.test1` would show all column families from keyspace1 and only the test1 column family from keyspace2.  Note that there can be strange behaviors with this flag as other flags.  Adding a system keyspace to this flag will have no effect unless the `--show_system` flag is also included.  Adding namespaces to this flag will change what namespaces are included in the total for aggregations but these namespaces will not be printed out if the `--show_keyspaces` or `--show_cfs` flags are not included.  For example `--namespaces keyspace1,keyspace2.test1 --show_keyspaces` would output an entry for `total`, `keyspace1`, and `keyspace2` where `total` will be the aggregate of all column families in keyspace1 as well as the column family test1 in keyspace2, `keyspace1` will be the aggregate of all column families within it, and `keyspace2` will be the aggregate of only the column family `test1`.  If you are using this flag and show_system then you must include which system keyspaces you wish to include, they will not be included by default if using the namespaces flag.
 
 cassandra-tracing
 -----------------
@@ -139,8 +139,8 @@ The Session Id can be used to introspect specific queries (which are logged as a
 	Connected to cassandra at 172.ip.ip.ip:9042.
 	[cqlsh 5.0.1 | Cassandra 2.1.11 | CQL spec 3.2.1 | Native protocol v3]
 	Use HELP for help.
-	cqlsh&gt; use system_traces;
-	cqlsh:system_traces&gt; select * from events WHERE session_id=bedd77a0-159e-11e6-af1d-5b2aec1d0944;
+	cqlsh> use system_traces;
+	cqlsh:system_traces> select * from events WHERE session_id=bedd77a0-159e-11e6-af1d-5b2aec1d0944;
 
 	 session_id                           | event_id                             | activity                                                                                         | source       | source_elapsed | thread
 	--------------------------------------+--------------------------------------+--------------------------------------------------------------------------------------------------+--------------+----------------+---------------------
