@@ -64,8 +64,8 @@ setup(
     install_requires=parse_requirements('requirements.txt'),
     include_package_data=True,
     scripts=[
-        '/cassandra-toolbox/cassandra-stat',
-        '/cassandra-toolbox/cassandra-tracing'
+        'cassandra-toolbox/cassandra-stat',
+        'cassandra-toolbox/cassandra-tracing'
     ],
     description=(
         "A suite of tools for Cassandra - A highly scalable distributed "
