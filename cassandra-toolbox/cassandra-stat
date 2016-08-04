@@ -426,7 +426,7 @@ class CassandraStat(object):
             for metric in self.metrics:
                 # If the metric should have its difference taken then do so,
                 # otherwise just report the most recent value
-                if metric("diff"):
+                if metric.get("diff"):
                     retval[ns][metric["display_name"]] = (
                         current_metric_data.get(metric["display_name"], 0) -
                         self.previous_data.get(ns, {}).get(
@@ -503,7 +503,7 @@ class CassandraStat(object):
                 print(datastr)
         # If there are multiple namespaces are printed then we should
         # put a new line in between each block of namespaces
-        if len(number_of_printed_ns) > 1:
+        if number_of_printed_ns > 1:
             print("\n")
 
     def print_data(self):

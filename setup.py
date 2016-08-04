@@ -56,7 +56,7 @@ def parse_requirements(filename):
 
 setup(
     name="cassandra-toolbox",
-    version='0.1.1',
+    version='0.1.2',
     author="Jeffrey Berger",
     author_email="jeff.berger@knewton.com",
     license="MIT",
