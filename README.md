@@ -12,17 +12,23 @@ Installation
 
 It is preferable to create a virtual environment to install these tools into
 
+.. code:: shell
+
     pip install virtualenv
     virtualenv /path/to/your/virtualenv
     source /path/to/your/virtualenv/bin/activate
 
 To install the project you can clone this repo and install it directly into your virtual environment, this would get you the latest code
 
+.. code:: shell
+
     git clone git@github.com:Knewton/cassandra-toolbox.git
     cd cassandra-toolbox
     ./setup.py install
 
 You can also directly install our package from pip
+
+.. code:: shell
 
     pip install cassandra-toolbox
 
@@ -44,12 +50,11 @@ Installing Jolokia is painless.  You first `Link download the JVM agent from the
 
 A restart of the Cassandra instance is required after this modification.
 
-To use cassandra-stat you only need to execute the following local to the Cassandra instance you wish to monitor.  You must have activated the virtual environment that cassandra-toolbox is installed into if you have installed the pacakge into a virtual environment.
+To use cassandra-stat you only need to execute the following local to the Cassandra instance you wish to monitor.  You must have activated the virtual environment that cassandra-toolbox is installed into if you have installed the pacakge into a virtual environment.  The output will look similar to the following:
+
+.. code:: shell
 
     $cassandra-stat
-
-The output will look similar to the following:
-
     Reads     Ranges    Writes    Reads (99%) ms   Ranges (99%) ms   Writes (99%) ms   Compactions     Flushes    Row Cache Misses     Time    ns
       1         0        111          91.462            68.81            17.4               0             0              0           20:15:36  total
       2         4        113           91.4             68.30            17.98              0             0              0           20:15:37  total
@@ -75,40 +80,40 @@ If a namespace has no traffic, that is if there are 0 reads, range queries, or w
 
 Configurations are set by command line flags, these can be accessed by running ``cassandra-stat --help``:
 
-  * --header_rows int:
+  * ``--header_rows int``:
   	* An integer of how many rows should pass before a new header line is output.  If this is 0 then only the first header will be printed, and if this is -1 then the top header row will not be printed.  Default 10.
-  * --rate int:
+  * ``--rate int``:
   	* How many seconds should pass between server polls.  Default 1.
-  * --show_system:
+  * ``--show_system``:
 	* Include system keyspaces and their related column families in the output.  The aggregation in "total" will include system keyspace entires as well, which is not the default behavior.
-  * --host string:
+  * ``--host string``:
 	* The http://HOST:PORT that this script should connect to.  Default http://localhost:8778.
-  * --show_keyspaces:
+  * ``--show_keyspaces``:
 	* Set this flag in order to show keyspace level output.
-  * --show_cfs:
+  * ``--show_cfs``:
 	* Set this flag to show `<keyspace>.<columnfamily>` level output.
-  * --no_total:
+  * ``--no_total``:
 	* Set this flag to suppress output of the aggregated total.  This may have the effect of having no output when there is no traffic in the database.
-  * --show_zeros:
+  * ``--show_zeros``:
 	* Show all namespaces that are set to be output regardless if there is no activity.
-  * --namespaces string:
-  	* Comma separated list of namespaces to process and show.  To show an entire keyspace then use the keyspace name as an entry, and to show only a column family then add ``<keyspace>.<columnfamily>`` to the list.  For example ``--namespaces keyspace1,keyspace2.test1`` would show all column families from keyspace1 and only the test1 column family from keyspace2.  Note that there can be strange behaviors with this flag as other flags.  Adding a system keyspace to this flag will have no effect unless the ``--show_system`` flag is also included.  Adding namespaces to this flag will change what namespaces are included in the total for aggregations but these namespaces will not be printed out if the ``--show_keyspaces`` or ``--show_cfs`` flags are not included.  For example ``--namespaces keyspace1,keyspace2.test1 --show_keyspaces`` would output an entry for ``total``, ``keyspace1``, and `keyspace2` where `total` will be the aggregate of all column families in ``keyspace1`` as well as the column family ``test1`` in ``keyspace2``, ``keyspace1`` will be the aggregate of all column families within it, and ``keyspace2`` will be the aggregate of only the column family ``test1``.  If you are using this flag and show_system then you must include which system keyspaces you wish to include, they will not be included by default if using the namespaces flag.
+  * ``--namespaces string``:
+  	* Comma separated list of namespaces to process and show.  To show an entire keyspace then use the keyspace name as an entry, and to show only a column family then add ``<keyspace>.<columnfamily>`` to the list.  For example ``--namespaces keyspace1,keyspace2.test1`` would show all column families from ``keyspace1`` and only the ``test1`` column family from ``keyspace2``.  Note that there can be strange behaviors with this flag as other flags.  Adding a system keyspace to this flag will have no effect unless the ``--show_system`` flag is also included.  Adding namespaces to this flag will change what namespaces are included in the total for aggregations but these namespaces will not be printed out if the ``--show_keyspaces`` or ``--show_cfs`` flags are not included.  For example ``--namespaces keyspace1,keyspace2.test1 --show_keyspaces`` would output an entry for ``total``, ``keyspace1``, and ``keyspace2`` where ``total`` will be the aggregate of all column families in ``keyspace1`` as well as the column family ``test1`` in ``keyspace2``, ``keyspace1`` will be the aggregate of all column families within it, and ``keyspace2`` will be the aggregate of only the column family ``test1``.  If you are using this flag and ``--show_system`` then you must include which system keyspaces you wish to include, they will not be included by default if using the ``--namespaces`` flag.
 
 cassandra-tracing
 -----------------
 This script facilitates analysis of Cassandra tracing data, which on its own is difficult to draw conclusions from.  Tracing is very useful to look at individual CQL queries in the cqlsh shell, however to get a better idea of your system's behavior it is often useful to sample a percentage of queries, trace them, and save these traces for later.  Cassandra makes this easy to do with nodetool.  You can use the following to set the probability that any cql query (that is coordinated by the cassandra node local to this command) is traced to 0.1%.
 
+.. code:: shell
+
 	$nodetool settraceprobability 0.001
 
 Note that a value of 1 means every query will be traced.  A trace logs many lines for every query so be careful of setting this value very high.  It is possible that tracing less than 5% of all queries can result in a write workload which is equal in number to the load which it is tracing.
 
-To use cassandra-tracing you only need to execute the following local to the Cassandra instance you wish to investigate the tracing logs of.  You must have activated the virtual environment that cassandra-toolbox is installed into if you have installed the pacakge into a virtual environment.
+To use cassandra-tracing you only need to execute the following local to the Cassandra instance you wish to investigate the tracing logs of.  You must have activated the virtual environment that cassandra-toolbox is installed into if you have installed the pacakge into a virtual environment.  The output will look similar to the following:
 
-    $cassandra-tracing \`hostname -I`
+.. code:: shell
 
-
-The output will look similar to the following:
-	$ cassandra-tracing \`hostname -I`
+	$ cassandra-tracing `hostname -I`
 	100% Complete: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX|100
 
 	Total skipped due to null duration:	0
@@ -138,8 +143,10 @@ The output displays the following information, sorted by duration:
   * CQL query or inferred query fragment (hidden in slim mode)
 
 The Session Id can be used to introspect specific queries (which are logged as a session) in cqlsh yourself, by querying for the session id in the events table of the system_tracing keyspace.
-	$ cqlsh \`hostname -I`
 
+.. code:: shell
+
+    $ cqlsh `hostname -I`
     Connected to cassandra at 172.ip.ip.ip:9042.
     [cqlsh 5.0.1 | Cassandra 2.1.11 | CQL spec 3.2.1 | Native protocol v3]
     Use HELP for help.
