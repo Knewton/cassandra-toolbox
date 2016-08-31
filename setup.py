@@ -57,9 +57,10 @@ def parse_requirements(filename):
 setup(
     name="cassandra-toolbox",
     version='0.1.2',
-    author="Jeffrey Berger",
-    author_email="jeff.berger@knewton.com",
-    license="MIT",
+    author="Knewton Database Team",
+    author_email="database@knewton.com",
+    license="Apache2",
+    url="https://github.com/Knewton/cassandra-toolbox",
     packages=find_packages(),
     install_requires=parse_requirements('requirements.txt'),
     include_package_data=True,
