@@ -37,7 +37,11 @@ cassandra-stat
 
 The cassandra-stat tool shows a real-time feed of how many operations have gone through Cassandra as reported by the JMX interface that is exposed.  Many people pump this information through Graphite or another data collector which is a good idea so you can visualize and store the data.  However these systems usually poll every minute and can lag behind events.  This allows you to see to the second what is occuring on the system in a manner similar to iostat.
 
-This script interfaces with the jolokia jmx-http bridge which must be attached to your Cassandra instances that you plan to run cassandra-stat against.  This is very easy however and not intrustive to Cassandra.  **TODO Instructions on how to install jolokia on cassandra**
+This script interfaces with the jolokia jmx-http bridge which must be attached to your Cassandra instances that you plan to run cassandra-stat against.  This is very easy however and not intrustive to Cassandra.
+
+Installing Jolokia is painless.  You first download the JVM agent from their website https://jolokia.org/download.html .  Then you modify your `cassandra-env.sh` file to include the following line:
+    JVM_OPTS="$JVM_OPTS -javaagent:<Path To Jolokia JVM Agent Jar>.jar"
+A restart of the Cassandra instance is required after this modification.
 
 To use cassandra-stat you only need to execute the following local to the Cassandra instance you wish to monitor.  You must have activated the virtual environment that cassandra-toolbox is installed into if you have installed the pacakge into a virtual environment.
 
