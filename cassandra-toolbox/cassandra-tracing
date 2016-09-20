@@ -132,8 +132,8 @@ def process_sessions(dbsession, time_threshold, tombstone_threshold):
     sessions_cnt = dbsession.execute('SELECT COUNT(*) FROM sessions')
     total_cnt = sessions_cnt[0].count
     current_cnt = 0
-    skipped_null = []
-    skipped_err = []
+    skipped_null = []  # Elements: str
+    skipped_err = []  # Elements: tuple<str, str>
     for sess in sessions:
         current_cnt += 1
         print_update(current_cnt, total_cnt)
@@ -179,7 +179,9 @@ def process_sessions(dbsession, time_threshold, tombstone_threshold):
     print('Total skipped due to error:\t{se}'
           .format(se=len(skipped_err)))
     if skipped_err:
-        print('\t' + '\n\t'.join(skipped_err[0] + '\t' + skipped_err[1]))
+        print('\t' + '\n\t'.join([
+            '{sess}\t{err}'.format(sess=x[0], err=x[1]) for x in skipped_err
+        ]))
     print('\n\n')
     return sorted(output, key=lambda k: k['duration'])
 
@@ -248,7 +250,12 @@ def get_event_info(dbsession, session_id):
             flags.add('T')
 
         if not time_started:
-            time_started = event.dateOf_event_id.isoformat()
+            try:
+                # Cassandra
+                time_started = event.dateOf_event_id.isoformat()
+            except AttributeError:
+                # Scylla
+                time_started = event.system_dateof_event_id.isoformat()
     return (tot_tombstone_cnt, max_tombstone_cnt, time_started, query.strip(),
             ''.join(flags))
 
