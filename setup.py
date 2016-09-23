@@ -56,7 +56,7 @@ def parse_requirements(filename):
 
 setup(
     name="cassandra-toolbox",
-    version='0.1.4',
+    version='0.1.5',
     author="Knewton Database Team",
     author_email="database@knewton.com",
     license="Apache2",
