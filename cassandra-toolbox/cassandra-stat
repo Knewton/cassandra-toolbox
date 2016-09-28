@@ -28,6 +28,8 @@ class CassandraStat(object):
     def __init__(
         self,
         host,
+        user,
+        password,
         header_rows,
         rate,
         show_system,
@@ -68,6 +70,8 @@ class CassandraStat(object):
                 list of keyspace or keysapce.cf names to be shown
         """
         self.host = host
+        self.user = user
+        self.password = password
         self.printed_rows_between_headers = header_rows
         self.rate = rate
         self.show_system = show_system
@@ -271,11 +275,15 @@ class CassandraStat(object):
             a 2xx/3xx status code with an error field that is nonempty then
             the process will exit with a return code of 1 and print an error.
         """
+        auth = requests.auth.HTTPBasicAuth(self.user, self.password) \
+                if self.user is not None and self.password is not None else None
+
         try:
             resp = requests.get(
                 "{host}/jolokia/read/org.apache.cassandra.metrics:"
                 "type=ColumnFamily,*,name={name}/{key}"
-                .format(name=name, key=keyname, host=self.host)
+                .format(name=name, key=keyname, host=self.host),
+                auth=auth
             )
         except requests.exceptions.ConnectionError:
             print(
@@ -541,6 +549,18 @@ def parse_args():
         help='Host and port to connect to, format http://HOST:PORT.'
     )
     parser.add_argument(
+        '--user',
+        dest='user',
+        default=None,
+        help='The username for use in basic HTTP authentication.'
+    )
+    parser.add_argument(
+        '--password',
+        dest='password',
+        default=None,
+        help='The password for use in basic HTTP authentication.'
+    )
+    parser.add_argument(
         '--header_rows',
         dest='header_rows',
         default=10,
@@ -635,6 +655,8 @@ def main():
     try:
         CassandraStat(
             host=args.host,
+            user=args.user,
+            password=args.password,
             header_rows=args.header_rows,
             rate=args.rate,
             show_system=args.show_system,
