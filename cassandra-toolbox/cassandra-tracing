@@ -55,6 +55,12 @@ def parse_args():
         help="Specify ip of the node being queried."
     )
     arg_parser.add_argument(
+        '-p', '--port', dest="node_port", default=9042,
+        type=int, help=(
+            'Specify the port to connect to on the host, default 9042.'
+        )
+    )
+    arg_parser.add_argument(
         '-b', '--tombstoneThreshold', dest="tombstone_threshold", default=0,
         type=int, help=(
             'Show only sessions who read tombstones equal to or greater than '
@@ -315,7 +321,7 @@ def main():
         None
     """
     args = parse_args()
-    cluster = Cluster([args.node_ip])
+    cluster = Cluster([args.node_ip], args.node_port)
     dbsession = cluster.connect('system_traces')
     output = process_sessions(
         dbsession,
