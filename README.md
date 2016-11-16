@@ -115,7 +115,7 @@ Note that a value of 1 means every query will be traced.  A trace logs many line
 To use cassandra-tracing you only need to execute the following local to the Cassandra instance you wish to investigate the tracing logs of.  You must have activated the virtual environment that cassandra-toolbox is installed into if you have installed the pacakge into a virtual environment.  The output will look similar to the following:
 
 ```bash
-$ cassandra-tracing `hostname -I`
+$ cassandra-tracing
 100% Complete: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX|100
 
 Total skipped due to null duration:	0
@@ -148,7 +148,7 @@ The output displays the following information, sorted by duration:
 The Session Id can be used to introspect specific queries (which are logged as a session) in cqlsh yourself, by querying for the session id in the events table of the system_tracing keyspace.
 
 ```bash
-$ cqlsh `hostname -I`
+$ cqlsh
 Connected to cassandra at 172.ip.ip.ip:9042.
 [cqlsh 5.0.1 | Cassandra 2.1.11 | CQL spec 3.2.1 | Native protocol v3]
 Use HELP for help.
