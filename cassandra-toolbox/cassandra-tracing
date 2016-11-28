@@ -51,8 +51,8 @@ def parse_args():
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     arg_parser.add_argument(
-        "node_ip",
-        help="Specify ip of the node being queried."
+        '-H', '--host', dest="node_ip", default='127.0.0.1',
+        help="Specify IP address of the node being queried, default 127.0.0.1."
     )
     arg_parser.add_argument(
         '-p', '--port', dest="node_port", default=9042,
